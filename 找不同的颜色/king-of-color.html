@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>照澜院H5小游戏</title>
+		
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<!--<script src="js/jquery-3.1.0.js" type="text/javascript" charset="utf-8"></script>-->
+		
+		<style type="text/css">
+			#container{
+				width: 800px;
+				height: 800px;
+				border: 1px solid gray;
+				margin: auto;
+				overflow: hidden;
+			}
+			.square{
+				float: left;
+				border: 1px solid gray;
+			}
+			h1,h2{
+				text-align: center;
+			}
+			div>h2{
+				display: inline-block;
+			}
+			#go{
+				display: inline-block;
+				color: red;
+			}
+			.time{
+				margin: auto;
+				width: 150px;
+			}
+		</style>
+		
+	</head>
+	<body>
+	
+		<div class="time">
+			<h2>倒计时：</h2><h2 id="go">60</h2>
+		</div>
+		
+		
+		<div id="container">
+			
+		</div>
+	</body>
+	
+	<script type="text/javascript">
+		
+		//游戏逻辑
+		var nth = 3;
+		
+		var container = $('#container');
+		
+		createSquare(nth);
+		
+		function createSquare (count) {
+			var num = Math.pow(count, 2);
+			$('#container').children().remove();
+			for (var i = 0; i < num; i ++) {
+				var sq = $("<div class='square'></div>");
+				sq.css("height", (800 / nth - 2) + "px")
+				sq.css("width", (800 / nth - 2) + "px")
+				container.append(sq);
+			}
+				
+			var sel = Math.floor(Math.random()*num);
+//			var sel=1;
+			console.log(sel);
+			$($('#container>div')[sel]).click(function () {
+				createSquare(++nth);
+			});
+			
+			setColor(sel);
+			
+		}
+		
+		//颜色逻辑
+		function setColor (sel) {
+			var rValue = Math.floor(Math.random() * 255);
+			var gValue = Math.floor(Math.random() * 255);
+			var bValue = Math.floor(Math.random() * 255);
+			
+			var rgbStr = "rgb(" + rValue + "," + gValue + "," + bValue + ")";
+			
+			$('.square').css("background-color", rgbStr);
+			
+			var key = 100 / nth;
+			var rValueK;
+			var gValueK;
+			var bValueK;
+			if (rValue > 100) {
+				rValueK = Math.floor(rValue - key);
+			}else{
+				rValueK = Math.floor(rValue + key);
+			}
+			if (gValue > 100) {
+				gValueK = Math.floor(gValue - key);
+			}else{
+				gValueK = Math.floor(gValue + key);
+			}
+			if (bValue > 100) {
+				bValueK = Math.floor(bValue - key);
+			}else{
+				bValueK = Math.floor(bValue + key);
+			}
+			var rgbStrSel = "rgb(" + rValueK + "," + gValueK + "," + bValueK + ")";
+//			$($('#container>div')[sel]).css("background-color", "black");
+			$($('#container>div')[sel]).css("background-color", rgbStrSel);
+			
+			console.log(rgbStr);
+			console.log(rgbStrSel);
+			
+		}
+	
+		//时间逻辑
+		var timer = setInterval(function () {
+			console.log($('#go'));
+			var value = parseInt($('#go').text());
+			value --;
+			$('#go').text(value);
+			if (value == 0) {
+				clearInterval(timer);
+				alert("您的得分是：" + nth + "分！");
+				location.reload();
+			}
+		}, 1000);
+		
+	</script>
+	
+</html>
